@@ -153,7 +153,7 @@ async function loadBookingHistory(uid) {
   }
 }
 
-// Load Notices: two queries - global + specific
+/* // Load Notices: two queries - global + specific
 async function loadNotices() {
   try {
     // Query 1: global notices
@@ -200,7 +200,7 @@ async function loadNotices() {
     console.error("Error loading notices:", error);
     noticeList.innerHTML = "<li>Error loading notices</li>";
   }
-}
+} */
 
 // Logout (log it)
 logoutBtn.addEventListener("click", async () => {
@@ -212,3 +212,4 @@ logoutBtn.addEventListener("click", async () => {
     console.error("Logout error:", error);
   }
 });
+
