@@ -169,37 +169,59 @@ async function loadBookings() {
 async function updateBookingStatus(bookingId, newStatus) {
   try {
     const bookingRef = doc(db, "bookings", bookingId);
+
     await runTransaction(db, async (tx) => {
+      // STEP 1: Read all required docs first
       const bookingSnap = await tx.get(bookingRef);
       if (!bookingSnap.exists()) throw new Error("Booking not found.");
+
+      const bookingData = bookingSnap.data();
+      let userSnap = null;
+      let userRef = null;
+
+      if (newStatus === "Rejected") {
+        userRef = doc(db, "customers", bookingData.userId);
+        userSnap = await tx.get(userRef);
+      }
+
+      // STEP 2: Perform writes after all reads
       tx.update(bookingRef, {
         status: newStatus,
         reviewedAt: serverTimestamp(),
         reviewedBy: currentAdminUid,
       });
+
+      if (newStatus === "Rejected" && userSnap?.exists()) {
+        const userData = userSnap.data();
+        tx.update(userRef, { quota: (userData.quota || 0) + 1 });
+      }
     });
 
-    // after transaction, fetch booking to get latest data (email, userId)
-    try {
-      const bookingSnap = await getDoc(doc(db, "bookings", bookingId));
-      if (bookingSnap.exists()) {
-        const b = bookingSnap.data();
-        // notify customer by email
-        const custEmail = b.email;
-        const subject = newStatus === "Approved" ? "Your gas booking is approved" : "Your gas booking was rejected";
-        const message = `Hello,\n\nYour booking (ID: ${bookingId}) status has been updated to: ${newStatus}.\n\nRegards,\nGas Agency System`;
-        if (custEmail) await sendEmail(custEmail, subject, message);
-      }
-    } catch (err) {
-      console.warn("Failed to send booking-status email:", err);
+    // STEP 3: Send email notification after transaction completes
+    const bookingSnap = await getDoc(doc(db, "bookings", bookingId));
+    if (bookingSnap.exists()) {
+      const b = bookingSnap.data();
+      const custEmail = b.email;
+      const subject =
+        newStatus === "Approved"
+          ? "Your gas booking is approved"
+          : "Your gas booking was rejected";
+      const message = `Hello,\n\nYour booking (ID: ${bookingId}) status has been updated to: ${newStatus}.\n\nRegards,\nGas Agency System`;
+      if (custEmail) await sendEmail(custEmail, subject, message);
     }
 
-    await logEvent(currentAdminUid, "admin", "BOOKING_" + newStatus, `Admin ${newStatus.toLowerCase()} a booking.`);
+    await logEvent(
+      currentAdminUid,
+      "admin",
+      "BOOKING_" + newStatus,
+      `Admin ${newStatus.toLowerCase()} a booking.`
+    );
     await loadDashboard();
   } catch (err) {
     console.error("Error updating booking:", err);
   }
 }
+
 
 // --------------------
 // Post Notice (with dropdown)
