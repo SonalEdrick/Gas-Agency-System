@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | Gas Agency System</title>
+  <link rel="stylesheet" href="admin-dashboard.css" />
+  <script type="module" src="admin-dashboard.js" defer></script>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <h1>Admin Dashboard</h1>
+    <div class="nav-buttons">
+      <a href="index.html" class="btn">Home</a>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </div>
+  </nav>
+
+  <!-- Dashboard Overview -->
+  <section class="stats">
+    <div class="card">
+      <h3>Total Customers</h3>
+      <p id="totalCustomers">--</p>
+    </div>
+    <div class="card">
+      <h3>Total Bookings</h3>
+      <p id="totalBookings">--</p>
+    </div>
+    <div class="card">
+      <h3>Pending Approvals</h3>
+      <p id="pendingBookings">--</p>
+    </div>
+  </section>
+
+  <!-- Booking Management -->
+  <section class="bookings">
+    <h2>Manage Bookings</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Customer</th>
+          <th>Email</th>
+          <th>Payment</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="bookingsTable">
+        <tr><td colspan="5" style="text-align:center;">Loading...</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <!-- Notices -->
+  <section class="notices">
+    <h2>Post a Notice</h2>
+    <form id="noticeForm">
+      <textarea id="noticeMessage" placeholder="Enter notice message..." required></textarea>
+
+      <label for="noticeTarget">Target:</label>
+      <select id="noticeTarget">
+        <option value="global">All Customers</option>
+        <option value="specific">Specific Customer</option>
+      </select>
+
+      <!-- Customer dropdown will appear only for specific -->
+      <select id="customerSelect" style="display:none; margin-top:8px;">
+        <option value="">Select a customer...</option>
+      </select>
+
+      <button type="submit" class="btn" style="margin-top:10px;">Post Notice</button>
+    </form>
+
+    <h3>Existing Notices</h3>
+    <ul id="noticeList">
+      <li>Loading...</li>
+    </ul>
+  </section>
+</body>
+</html>

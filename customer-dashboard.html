@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer Dashboard | Gas Agency System</title>
+  <link rel="stylesheet" href="customer-dashboard.css" />
+  <script type="module" src="customer-dashboard.js" defer></script>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <h1>Gas Agency System</h1>
+    <div class="nav-buttons">
+      <a href="customer-profile.html" class="btn">My Profile</a>
+      <button id="logoutBtn" class="logout-btn">Logout</button>
+    </div>
+  </nav>
+
+  <!-- Dashboard Container -->
+  <div class="dashboard-container">
+    
+    <!-- User Info -->
+    <section class="user-info">
+      <h2>Welcome, <span id="userName">Customer</span></h2>
+      <p>Email: <span id="userEmail">example@email.com</span></p>
+      <p>Remaining Cylinders: <span id="userQuota">--</span></p>
+    </section>
+
+    <!-- Booking Section -->
+    <section class="booking-section">
+      <h2>Book a Gas Cylinder</h2>
+      <form id="bookingForm">
+        <label for="paymentOption">Select Payment Method:</label>
+        <select id="paymentOption" required>
+          <option value="" disabled selected>Select Payment</option>
+          <option value="COD">Cash on Delivery</option>
+          <option value="Paytm">Paytm QR Payment</option>
+        </select>
+        <button type="submit" class="btn">Book Cylinder</button>
+      </form>
+      <p id="bookingMessage" class="message"></p>
+    </section>
+
+    <!-- Booking History -->
+    <section class="history-section">
+      <h2>My Booking History</h2>
+      <table id="historyTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Payment</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="historyBody">
+          <tr><td colspan="3" style="text-align:center;">Loading...</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Notices Section -->
+    <section class="notices-section">
+      <h2>Admin Notices</h2>
+      <ul id="noticeList">
+        <li>Loading notices...</li>
+      </ul>
+    </section>
+  </div>
+</body>
+</html>
